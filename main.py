@@ -1,7 +1,6 @@
 from fastapi import FastAPI
+from controllers.HealthController import router as HealthController
 
 app = FastAPI()
 
-@app.get("/")
-def home():
-	return "Hello World!"
+app.include_router(HealthController, tags=["Health"], prefix="/api/health")
