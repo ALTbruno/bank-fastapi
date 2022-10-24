@@ -1,11 +1,25 @@
 from dtos.UsuarioSalvar import UsuarioSalvar
-import repositories.UsuarioRepository as UsuarioRepository
 
-async def criar_usuario(usuario: UsuarioSalvar):
-	return await UsuarioRepository.criar_usuario(usuario)
+from decouple import config
 
-async def listar_todos():
-	return await UsuarioRepository.listar_todos()
+from repositories.UsuarioRepository import UsuarioRepository
 
-async def buscar_por_id(id: str):
-	return await UsuarioRepository.buscar_por_id(id)
+usuarioRepository = UsuarioRepository()
+
+class UsuarioService:
+	def criar_usuario(self, usuario: UsuarioSalvar):
+		#TODO: ajustar isso aqui
+		try:
+			ja_existe = usuarioRepository.ja_existe(usuario)
+			if ja_existe:
+				return "Já existe"
+			else:
+				return usuarioRepository.criar_usuario(usuario)
+		except:
+			pass
+
+	def listar_todos(self):
+		return usuarioRepository.listar_todos()
+
+	def buscar_por_id(self, id: str):
+		return usuarioRepository.buscar_por_id(id)

@@ -1,20 +1,24 @@
 from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse
 from dtos.UsuarioSalvar import UsuarioSalvar
-
-import services.UsuarioService as UsuarioService
+from services.UsuarioService import UsuarioService
 
 router = APIRouter()
 
+usuarioService = UsuarioService()
+
 @router.post("/", response_description="Rota para criação de um usuário")
-async def criar_usuario(usuario: UsuarioSalvar = Body(...)):
-	usuario = await UsuarioService.criar_usuario(usuario)
-	return JSONResponse(status_code=201, content=usuario)
+def criar_usuario(usuario: UsuarioSalvar = Body(...)):
+	try:
+		usuario = usuarioService.criar_usuario(usuario)
+		return JSONResponse(status_code=201, content=usuario)
+	except:
+		"erro aqui"
 
 @router.get("/", response_description="Rota para listagem de todos os usuários")
-async def listar_todos():
-	return await UsuarioService.listar_todos()
+def listar_todos():
+	return usuarioService.listar_todos()
 
 @router.get("/{id}", response_description="Retorna um único usuário")
-async def buscar_por_id(id: str):
-	return await UsuarioService.buscar_por_id(id)
+def buscar_por_id(id: str):
+	return usuarioService.buscar_por_id(id)
