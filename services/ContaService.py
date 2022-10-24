@@ -16,3 +16,6 @@ class ContaService:
 			numero_conta = self.gerar_numero()
 		conta = ContaModel(agencia = '0001', numero = numero_conta, saldo = 0, cliente_id = cliente_id)
 		return contaRepository.criar_conta(conta)
+
+	def listar_todas(self):
+		return contaRepository.listar_todas()

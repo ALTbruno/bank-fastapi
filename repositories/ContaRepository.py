@@ -17,5 +17,19 @@ class ContaRepository:
 		conta_criada = contas_collection.find_one({ '_id': ObjectId(conta_id)})
 		return conta_criada
 
+	def listar_todas(self):
+		contas = []
+		for conta in contas_collection.find():
+			contas.append(self.converter(conta))
+		return contas
+
+	def converter(self, conta):
+		return {
+			'id': str(conta['_id']),
+			'agencia': str(conta['agencia']),
+			'numero': str(conta['numero']),
+			'saldo': str(conta['saldo']),
+			'cliente_id': str(conta['cliente_id'])
+		}
 	def conta_ja_existe(self, numero: str) -> bool:
 		return contas_collection.count_documents({'numero': numero}) > 0
