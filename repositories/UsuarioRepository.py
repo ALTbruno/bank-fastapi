@@ -36,7 +36,7 @@ class UsuarioRepository:
 		usuario = usuarios_collection.find_one({ '_id': ObjectId(id) })
 		return self.converter_para_UsuarioBuscar(usuario)
 
-	def ja_existe(usuario: UsuarioSalvar) -> bool:
+	def ja_existe(self, usuario: UsuarioSalvar) -> bool:
 		existe_usuario_cpf = usuarios_collection.count_documents({'cpf': usuario.cpf}) > 0
 		existe_usuario_email = usuarios_collection.count_documents({'email': usuario.email}) > 0
 		return existe_usuario_cpf or existe_usuario_email

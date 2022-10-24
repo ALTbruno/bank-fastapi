@@ -8,15 +8,14 @@ usuarioRepository = UsuarioRepository()
 
 class UsuarioService:
 	def criar_usuario(self, usuario: UsuarioSalvar):
-		#TODO: ajustar isso aqui
 		try:
 			ja_existe = usuarioRepository.ja_existe(usuario)
 			if ja_existe:
-				return "Já existe"
+				return None
 			else:
 				return usuarioRepository.criar_usuario(usuario)
-		except:
-			pass
+		except Exception as ex:
+			raise(ex)
 
 	def listar_todos(self):
 		return usuarioRepository.listar_todos()
