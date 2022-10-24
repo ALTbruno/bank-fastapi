@@ -1,10 +1,11 @@
 from dtos.UsuarioSalvar import UsuarioSalvar
-
-from decouple import config
-
 from repositories.UsuarioRepository import UsuarioRepository
+from repositories.ContaRepository import ContaRepository
+from services.ContaService import ContaService
 
 usuarioRepository = UsuarioRepository()
+contaRepository = ContaRepository()
+contaService = ContaService()
 
 class UsuarioService:
 	def criar_usuario(self, usuario: UsuarioSalvar):
@@ -13,7 +14,10 @@ class UsuarioService:
 			if ja_existe:
 				return None
 			else:
-				return usuarioRepository.criar_usuario(usuario)
+				usuario = usuarioRepository.criar_usuario(usuario)
+				# * deixar assim? ou fazer via contaRepository?
+				contaService.criar_conta(usuario['id'])
+				return usuario
 		except Exception as ex:
 			raise(ex)
 
