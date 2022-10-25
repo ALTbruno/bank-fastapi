@@ -23,6 +23,10 @@ class AccountRepository:
 			accounts.append(self.convert_to_account_find(account))
 		return accounts
 
+	def find_by_id(self, id: str):
+		account = accounts_collection.find_one({ '_id': ObjectId(id)})
+		return self.convert_to_account_find(account)
+
 	def convert_to_account_find(self, account):
 		return {
 			'id': str(account['_id']),

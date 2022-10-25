@@ -19,3 +19,6 @@ class AccountService:
 
 	def get_all(self):
 		return accountRepository.get_all()
+
+	def find_by_id(self, id: str):
+		return accountRepository.find_by_id(id)

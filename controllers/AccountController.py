@@ -9,3 +9,7 @@ accountService = AccountService()
 @router.get("/", response_description="Lista todas as Contas")
 def get_all():
     return accountService.get_all()
+
+@router.get("/{id}", response_description="Retorna uma Conta")
+def find_by_id(id: str):
+    return accountService.find_by_id(id)
