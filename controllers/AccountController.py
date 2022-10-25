@@ -13,3 +13,7 @@ def get_all():
 @router.get("/{id}", response_description="Retorna uma Conta")
 def find_by_id(id: str):
     return accountService.find_by_id(id)
+
+@router.get("/{id}/balance", response_description="Retorna o saldo de uma Conta")
+def get_balance(id: str):
+    return accountService.get_balance(id)

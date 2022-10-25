@@ -22,3 +22,7 @@ class AccountService:
 
 	def find_by_id(self, id: str):
 		return accountRepository.find_by_id(id)
+
+	def get_balance(self, id: str):
+		account = self.find_by_id(id)
+		return {"balance": account['balance']}
