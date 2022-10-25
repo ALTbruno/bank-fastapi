@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field, EmailStr
 
-class UsuarioBuscar(BaseModel):
+class CustomerFind(BaseModel):
 	id: str = Field(...)
-	nome: str = Field(...)
-	sobrenome: str = Field(...)
+	name: str = Field(...)
+	last_name: str = Field(...)
 	cpf: str = Field(...)
 	email: EmailStr = Field(...)
 
