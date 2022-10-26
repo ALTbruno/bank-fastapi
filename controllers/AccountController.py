@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Body
+from fastapi.responses import JSONResponse
 from dtos.TransferSend import TransferSend
 
 from services.AccountService import AccountService
@@ -23,7 +24,8 @@ def get_balance(id: str):
 
 @router.post("/{origin_account_id}/transfer", response_description="Efetua uma Transferência")
 def transfer(origin_account_id: str, transfer: TransferSend = Body(...)):
-    return transferService.create(origin_account_id, transfer)
+    transfer = transferService.create(origin_account_id, transfer)
+    return JSONResponse(status_code=201, content=transfer)
 
 @router.get("/{id}/transactions", response_description="Retorna transações de uma conta (enviadas e recebidas)")
 def get_transactions_by_account_id(id: str):
