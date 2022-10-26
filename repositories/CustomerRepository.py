@@ -11,30 +11,16 @@ customers_collection = database.customers
 
 class CustomerRepository:
 
-	def convert_to_customer_find(self, customer):
-		return {
-			'id': str(customer['_id']),
-			'name':  str(customer['name']),
-			'last_name': str(customer['last_name']),
-			'cpf': str(customer['cpf']),
-			'email': str(customer['email'])
-		}
-
 	def create(self, customer: CustomerSave):
 		customer_id = customers_collection.insert_one(customer.__dict__).inserted_id
 		created_customer = customers_collection.find_one({ '_id': customer_id })
-		return self.convert_to_customer_find(created_customer)
+		return created_customer
 
 	def get_all(self):
-		customers = []
-		for customer in customers_collection.find():
-			customers.append(self.convert_to_customer_find(customer))
-
-		return customers
+		return customers_collection.find()
 
 	def find_by_id(self, id: str):
-		customer = customers_collection.find_one({ '_id': ObjectId(id) })
-		return self.convert_to_customer_find(customer)
+		return customers_collection.find_one({ '_id': ObjectId(id) })
 
 	def exists(self, customer: CustomerSave) -> bool:
 		exists_by_cpf = customers_collection.count_documents({'cpf': customer.cpf}) > 0
