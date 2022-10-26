@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-class AccountModel(BaseModel):
+class AccountFind(BaseModel):
     id: str = Field(...)
     agency_number: str = Field(...)
     account_number: str = Field(...)

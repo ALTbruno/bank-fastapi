@@ -23,6 +23,14 @@ class AccountRepository:
 
 	def find_by_id(self, id: str):
 		return accounts_collection.find_one({ '_id': ObjectId(id)})
+
+	def update_balance(self, id: str, new_balance: int):
+		account = accounts_collection.find_one_and_update(
+			{'_id': id},
+			{'$set': {'balance': new_balance}},
+			return_document=ReturnDocument.AFTER
+		)
+		return account
 		
 	def exists(self, account_number: str) -> bool:
 		return accounts_collection.count_documents({'account_number': account_number}) > 0

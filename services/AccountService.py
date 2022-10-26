@@ -39,3 +39,6 @@ class AccountService:
 			'balance': str(account['balance']),
 			'customer_id': str(account['customer_id'])
 		}
+	
+	def update_balance(self, account_id: str, new_balance: int):
+		return accountRepository.update_balance(account_id, new_balance)
