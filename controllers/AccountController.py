@@ -24,3 +24,7 @@ def get_balance(id: str):
 @router.post("/{origin_account_id}/transfer", response_description="Efetua uma Transferência")
 def transfer(origin_account_id: str, transfer: TransferSend = Body(...)):
     return transferService.create(origin_account_id, transfer)
+
+@router.get("/{id}/transactions", response_description="Retorna transações de uma conta (enviadas e recebidas)")
+def get_transactions_by_account_id(id: str):
+    return transferService.get_by_account(id)

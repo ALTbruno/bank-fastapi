@@ -15,3 +15,11 @@ class TransferRepository:
         transfer_id = transfers_collection.insert_one(transfer.__dict__).inserted_id
         created_transfer = transfers_collection.find_one({ '_id': ObjectId(transfer_id) })
         return created_transfer
+
+    def get_by_account(self, account_id: str):
+        return transfers_collection.find({
+            "$or": [
+            {'origin_account_id': account_id},
+            {'destination_account_id': account_id}
+            ]
+        }).sort('datetime', -1)

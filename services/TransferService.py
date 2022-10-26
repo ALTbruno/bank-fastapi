@@ -43,3 +43,9 @@ class TransferService:
             'value_in_cents': str(transfer['value_in_cents']),
             'datetime': str(transfer['datetime'])
         }
+
+    def get_by_account(self, account_id: str):
+        transfers = []
+        for transfer in transferRepository.get_by_account(account_id):
+            transfers.append(self.convert_to_transfer_find(transfer))
+        return transfers
