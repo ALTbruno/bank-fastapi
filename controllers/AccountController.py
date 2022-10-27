@@ -28,5 +28,5 @@ def transfer(origin_account_id: str, transfer: TransferSend = Body(...)):
     return JSONResponse(status_code=201, content=transfer)
 
 @router.get("/{id}/transactions", response_description="Retorna transações de uma conta (enviadas e recebidas)")
-def get_transactions_by_account_id(id: str):
-    return transferService.get_by_account(id)
+def get_transactions_by_account_id(id: str, start_date: str | None = None, end_date: str | None = None):
+    return transferService.get_by_account(id, start_date, end_date)
