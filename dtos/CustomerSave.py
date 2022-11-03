@@ -6,6 +6,7 @@ class CustomerSave(BaseModel):
 	name: str = Field(...)
 	last_name: str = Field(...)
 	cpf: str = Field(...)
+	birth_date: str = Field(...)
 	email: EmailStr = Field(...)
 	password: str = Field(...)
 
@@ -28,3 +29,17 @@ class CustomerSave(BaseModel):
 		if len(cpf) != 11:
 			raise ValueError('Must be 11 characters long')
 		return cpf
+
+	@validator('birth_date')
+	def validate_date_format_and_age(cls, birth_date):
+		if not re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', birth_date):
+			raise ValueError('Date format must be yyyy-MM-dd')
+		
+		today = datetime.today()
+		birth = datetime.strptime(birth_date, '%Y-%m-%d')
+		age = today.year - birth.year - ((today.month, today.day) < (birth.month, birth.day))
+		
+		if age < 18:
+			raise ValueError('You must be 18 or older to register')
+
+		return birth_date
