@@ -22,8 +22,9 @@ class TransferService:
 
         transfer_value_in_cents = transfer.value_in_cents
 
-        # TODO: Verificar se balance >= transfer_value_in_cents
         origin_account_balance = int(accountService.get_balance(origin_account_id)['balance'])
+        if origin_account_balance < transfer_value_in_cents:
+            raise BusinessException(400, "Insufficient balance")
         origin_account_balance -= transfer_value_in_cents
         accountService.update_balance(origin_account_id, origin_account_balance)
 
