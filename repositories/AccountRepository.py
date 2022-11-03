@@ -26,7 +26,7 @@ class AccountRepository:
 
 	def update_balance(self, id: str, new_balance: int):
 		account = accounts_collection.find_one_and_update(
-			{'_id': id},
+			{'_id': ObjectId(id)},
 			{'$set': {'balance': new_balance}},
 			return_document=ReturnDocument.AFTER
 		)
