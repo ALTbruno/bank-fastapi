@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Response
 from fastapi.responses import JSONResponse
 from dtos.TransferSend import TransferSend
 
+from exceptions.BusinessException import BusinessException
 from services.AccountService import AccountService
 from services.TransferService import TransferService
 
@@ -23,9 +24,13 @@ def get_balance(id: str):
     return accountService.get_balance(id)
 
 @ROUTER.post("/{origin_account_id}/transfer", response_description="Efetua uma Transferência")
-def transfer(origin_account_id: str, transfer: TransferSend = Body(...)):
-    transfer = transferService.create(origin_account_id, transfer)
-    return JSONResponse(status_code=201, content=transfer)
+def transfer(response: Response, origin_account_id: str, transfer: TransferSend = Body(...)):
+    try:
+        transfer = transferService.create(origin_account_id, transfer)
+        return JSONResponse(status_code=201, content=transfer)
+    except BusinessException as ex:
+        response.status_code = ex.status_code
+        return ex
 
 @ROUTER.get("/{id}/transactions", response_description="Retorna transações de uma conta (enviadas e recebidas)")
 def get_transactions_by_account_id(id: str, start_date: str | None = None, end_date: str | None = None):

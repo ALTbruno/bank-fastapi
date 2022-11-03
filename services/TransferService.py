@@ -1,6 +1,8 @@
 from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+
+from exceptions.BusinessException import BusinessException
 from dtos.TransferSend import TransferSend
 from models.TransferModel import TransferModel
 from repositories.TransferRepository import TransferRepository
@@ -13,7 +15,10 @@ class TransferService:
 
     def create(self, origin_account_id: str, transfer: TransferSend):
 
-        # TODO: checar origin_account_id != destination_account_id
+        destination_account_id = transfer.destination_account_id
+
+        if origin_account_id == destination_account_id:
+            raise BusinessException (400, "destination_account_id must be different from origin_account_id")
 
         transfer_value_in_cents = transfer.value_in_cents
 
@@ -22,9 +27,9 @@ class TransferService:
         origin_account_balance -= transfer_value_in_cents
         accountService.update_balance(origin_account_id, origin_account_balance)
 
-        destination_account_balance = int(accountService.get_balance(transfer.destination_account_id)['balance'])
+        destination_account_balance = int(accountService.get_balance(destination_account_id)['balance'])
         destination_account_balance += transfer_value_in_cents
-        accountService.update_balance(transfer.destination_account_id, destination_account_balance)
+        accountService.update_balance(destination_account_id, destination_account_balance)
 
         transfer_model = self.convert_send_to_model(origin_account_id, transfer)
         transfer_repository = transferRepository.create(transfer_model)
