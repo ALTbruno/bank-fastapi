@@ -26,6 +26,36 @@ def test_customer_registration_with_blank_values(client: TestClient):
     response = client.post("/api/customers", json=body)
     assert response.status_code == 422
 
+def test_customer_registration_with_cpf_not_numeric(client: TestClient):
+    body = {
+	'name': 'Isaac',
+	'last_name': 'Farias',
+	'cpf': 'numero__cpf',
+	'birth_date': '1991-11-06',
+	'email': 'isaac.farias@email.com',
+	'password': 'iuKGfU0qJ1'
+    }
+
+    response = client.post("/api/customers", json=body)
+    content = response.json()
+    assert response.status_code == 422
+    assert content['detail'][0]['msg'] == "Must be numeric"
+
+def test_customer_registration_with_cpf_length_other_than_11(client: TestClient):
+    body = {
+	'name': 'Isaac',
+	'last_name': 'Farias',
+	'cpf': '1234567890',
+	'birth_date': '1991-11-06',
+	'email': 'isaac.farias@email.com',
+	'password': 'iuKGfU0qJ1'
+    }
+
+    response = client.post("/api/customers", json=body)
+    content = response.json()
+    assert response.status_code == 422
+    assert content['detail'][0]['msg'] == "Must be 11 characters long"
+
 def test_customer_registration_with_cpf_in_use(client: TestClient):
     body = {
 	'name': 'Isaac',
