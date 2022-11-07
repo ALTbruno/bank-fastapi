@@ -11,7 +11,7 @@ ROUTER = APIRouter(prefix="/api/accounts", tags=["Account"])
 accountService = AccountService()
 transferService = TransferService()
 
-@ROUTER.get("/", response_description="Lista todas as Contas")
+@ROUTER.get("", response_description="Lista todas as Contas")
 def get_all():
     return accountService.get_all()
 

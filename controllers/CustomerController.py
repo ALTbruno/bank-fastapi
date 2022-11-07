@@ -7,7 +7,7 @@ ROUTER = APIRouter(prefix="/api/customers", tags=["Customer"])
 
 customerService = CustomerService()
 
-@ROUTER.post("/", response_description="Rota para criação de um usuário")
+@ROUTER.post("", response_description="Rota para criação de um usuário")
 def create(customer: CustomerSave = Body(...)):
 	try:
 		customer = customerService.create(customer)
@@ -18,7 +18,7 @@ def create(customer: CustomerSave = Body(...)):
 		raise ex
 
 
-@ROUTER.get("/", response_description="Rota para listagem de todos os usuários")
+@ROUTER.get("", response_description="Rota para listagem de todos os usuários")
 def get_all():
 	return customerService.get_all()
 
