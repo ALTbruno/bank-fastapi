@@ -26,6 +26,36 @@ def test_customer_registration_with_blank_values(client: TestClient):
     response = client.post("/api/customers", json=body)
     assert response.status_code == 422
 
+def test_customer_registration_with_birth_date_invalid_format(client: TestClient):
+    body = {
+	'name': 'Isaac',
+	'last_name': 'Farias',
+	'cpf': '98167244807',
+	'birth_date': '06-11-1991',
+	'email': 'isaac.farias@email.com',
+	'password': 'iuKGfU0qJ1'
+    }
+
+    response = client.post("/api/customers", json=body)
+    content = response.json()
+    assert response.status_code == 422
+    assert content['detail'][0]['msg'] == "Date format must be yyyy-MM-dd"
+
+def test_customer_registration_with_birth_date_invalid(client: TestClient):
+    body = {
+	'name': 'Isaac',
+	'last_name': 'Farias',
+	'cpf': '98167244807',
+	'birth_date': '1991-02-30',
+	'email': 'isaac.farias@email.com',
+	'password': 'iuKGfU0qJ1'
+    }
+
+    response = client.post("/api/customers", json=body)
+    content = response.json()
+    assert response.status_code == 422
+    assert content['detail'][0]['msg'] == "day is out of range for month"
+
 def test_customer_registration_with_cpf_not_numeric(client: TestClient):
     body = {
 	'name': 'Isaac',
