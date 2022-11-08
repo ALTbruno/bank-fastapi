@@ -56,11 +56,12 @@ class TransferService:
 
     def get_by_account(self, account_id: str, start_date: str | None = None, end_date: str | None = None):
 
-        transfers = []
-
-        valid_date_format = re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', start_date) and re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', end_date)
+        transfers = []       
         
         if start_date and end_date:
+
+            valid_date_format = re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', start_date) and re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', end_date)
+            
             if valid_date_format:
                 start_date = parse(start_date)
                 end_date = parse(end_date)
@@ -70,6 +71,7 @@ class TransferService:
                     transfers.append(self.convert_to_transfer_find(transfer))
             else:
                 raise BusinessException(400, "Date format must be yyyy-MM-dd")
+                
         else:
             for transfer in transferRepository.get_by_account(account_id):
                 transfers.append(self.convert_to_transfer_find(transfer))
