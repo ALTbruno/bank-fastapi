@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
@@ -57,13 +58,18 @@ class TransferService:
 
         transfers = []
 
+        valid_date_format = re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', start_date) and re.match('^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$', end_date)
+        
         if start_date and end_date:
-            start_date = parse(start_date)
-            end_date = parse(end_date)
-            end_date += relativedelta(day=end_date.day+1)
+            if valid_date_format:
+                start_date = parse(start_date)
+                end_date = parse(end_date)
+                end_date += relativedelta(day=end_date.day+1)
 
-            for transfer in transferRepository.get_by_account_and_dates(account_id, start_date, end_date):
-                transfers.append(self.convert_to_transfer_find(transfer))
+                for transfer in transferRepository.get_by_account_and_dates(account_id, start_date, end_date):
+                    transfers.append(self.convert_to_transfer_find(transfer))
+            else:
+                raise BusinessException(400, "Date format must be yyyy-MM-dd")
         else:
             for transfer in transferRepository.get_by_account(account_id):
                 transfers.append(self.convert_to_transfer_find(transfer))

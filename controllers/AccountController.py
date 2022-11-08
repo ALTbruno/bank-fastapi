@@ -33,5 +33,9 @@ def transfer(response: Response, origin_account_id: str, transfer: TransferSend 
         return ex
 
 @ROUTER.get("/{id}/transactions", response_description="Retorna transações de uma conta (enviadas e recebidas)")
-def get_transactions_by_account_id(id: str, start_date: str | None = None, end_date: str | None = None):
-    return transferService.get_by_account(id, start_date, end_date)
+def get_transactions_by_account_id(response: Response, id: str, start_date: str | None = None, end_date: str | None = None):
+    try:
+        return transferService.get_by_account(id, start_date, end_date)
+    except BusinessException as ex:
+        response.status_code = ex.status_code
+        return ex
