@@ -5,11 +5,9 @@ from decouple import config
 from pymongo import MongoClient
 from models.TransferModel import TransferModel
 
-MONGODB_URL = config("MONGODB_URL")
-
-mongo_client = MongoClient(MONGODB_URL)
-database = mongo_client.bank_fastapi
-transfers_collection = database.transfers
+from util.MongoDB import MongoDB
+MongoDB.initialize()
+transfers_collection = MongoDB.DATABASE.transfers
 
 class TransferRepository:
 

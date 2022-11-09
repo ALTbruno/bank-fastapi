@@ -3,11 +3,9 @@ from pymongo import MongoClient
 from bson import ObjectId
 from dtos.CustomerSave import CustomerSave
 
-MONGODB_URL = config("MONGODB_URL")
-
-mongo_client = MongoClient(MONGODB_URL)
-database = mongo_client.bank_fastapi
-customers_collection = database.customers
+from util.MongoDB import MongoDB
+MongoDB.initialize()
+customers_collection = MongoDB.DATABASE.customers
 
 class CustomerRepository:
 

@@ -5,11 +5,9 @@ from bson import ObjectId
 
 from models.AccountModel import AccountModel
 
-MONGODB_URL = config("MONGODB_URL")
-
-mongo_client = MongoClient(MONGODB_URL)
-database = mongo_client.bank_fastapi
-accounts_collection = database.accounts
+from util.MongoDB import MongoDB
+MongoDB.initialize()
+accounts_collection = MongoDB.DATABASE.accounts
 
 class AccountRepository:
 	
