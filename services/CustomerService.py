@@ -1,5 +1,6 @@
 from bson import ObjectId
 from dtos.CustomerSave import CustomerSave
+from exceptions.BusinessException import BusinessException
 from repositories.CustomerRepository import CustomerRepository
 from services.AccountService import AccountService
 
@@ -7,19 +8,16 @@ customerRepository = CustomerRepository()
 accountService = AccountService()
 
 class CustomerService:
+
 	def create(self, customer: CustomerSave):
-		try:
-			exists = customerRepository.exists(customer)
-			if exists:
-				return None
-			else:
-				customer = customerRepository.create(customer)
-				# * deixar assim? ou fazer via contaRepository?
-				customer_id = str(customer['_id'])
-				accountService.create(customer_id)
-				return self.convert_to_customer_find(customer)
-		except Exception as ex:
-			raise(ex)
+		if customerRepository.exists(customer):
+			raise BusinessException(400, "Usuário já cadastrado")
+
+		created_customer = customerRepository.create(customer)
+		# * deixar assim? ou fazer via contaRepository?
+		customer_id = str(created_customer['_id'])
+		accountService.create(customer_id)
+		return self.convert_to_customer_find(created_customer)
 
 	def get_all(self):
 		customers = []

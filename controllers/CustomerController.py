@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Response
 from fastapi.responses import JSONResponse
 from dtos.CustomerSave import CustomerSave
+from exceptions.BusinessException import BusinessException
 from services.CustomerService import CustomerService
 
 ROUTER = APIRouter(prefix="/api/customers", tags=["Customer"])
@@ -8,14 +9,13 @@ ROUTER = APIRouter(prefix="/api/customers", tags=["Customer"])
 customerService = CustomerService()
 
 @ROUTER.post("", response_description="Rota para criação de um usuário")
-def create(customer: CustomerSave = Body(...)):
+def create(response: Response, customer: CustomerSave = Body(...)):
 	try:
 		customer = customerService.create(customer)
-		if customer is None:
-			return JSONResponse(status_code=400, content={'message': 'Usuário já cadastrado'})
 		return JSONResponse(status_code=201, content=customer)
-	except Exception as ex:
-		raise ex
+	except BusinessException as ex:
+		response.status_code = ex.status_code
+		return ex
 
 
 @ROUTER.get("", response_description="Rota para listagem de todos os usuários")
